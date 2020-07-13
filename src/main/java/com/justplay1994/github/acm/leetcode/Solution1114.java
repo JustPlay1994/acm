@@ -1,58 +1,48 @@
 package com.justplay1994.github.acm.leetcode;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * 20200713
+ * 9:45
+ */
 public class Solution1114 {
 
-    //思路一：三把自旋锁
-    //思路二：
+    /**
+     * 1. mutext
+     * 2. volatile + cas
+     * 3. volatile
+     */
     class Foo {
 
-        int lock_1 = 1;
-        int lock_2 = 0;
-        int lock_3 = 0;
+        volatile int a = 0;
+        volatile int b = 0;
 
         public Foo() {
 
         }
 
         public void first(Runnable printFirst) throws InterruptedException {
-            //critical section
-            //P
-            while(lock_1 == 0){
-                //休眠
-//                Thread.sleep(100);
-            }
-            lock_1 = 0;
             // printFirst.run() outputs "first". Do not change or remove this line.
             printFirst.run();
-
-            lock_2 = 1;
-            //唤醒其他线程
+            a++;
         }
 
         public void second(Runnable printSecond) throws InterruptedException {
-
-            while(lock_2 == 0){
-                //休眠
-//                Thread.sleep(100);
+            while (a != 1){
+                //自旋等待
             }
-            lock_2 = 0;
             // printSecond.run() outputs "second". Do not change or remove this line.
             printSecond.run();
-
-            lock_3 = 1;
+            b++;
         }
 
         public void third(Runnable printThird) throws InterruptedException {
-            while (lock_3 == 0){
-                //休眠
-//                Thread.sleep(100);
-            }
+            while (b != 1){
 
-            lock_3 = 0;
+            }
             // printThird.run() outputs "third". Do not change or remove this line.
             printThird.run();
-
-            lock_1 = 1;
         }
     }
 
